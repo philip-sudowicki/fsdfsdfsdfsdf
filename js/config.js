@@ -17,13 +17,13 @@ export const CONFIG = {
   van: {
     length: 54,
     width: 28,
-    maxSpeed: 320,
-    accel: 420,
+    maxSpeed: 200,
+    accel: 300,
     brake: 1100,
-    reverseSpeed: 130,
+    reverseSpeed: 100,
     reverseAccel: 420,
     turnRate: 3.0,
-    turnFullSpeed: 150,
+    turnFullSpeed: 110,
     steerResponse: 12,
     grip: 9,
     driftGrip: 1.9,
@@ -35,21 +35,21 @@ export const CONFIG = {
     joystickRadius: 60,
     restitution: 0.3,
     crashSpeedLoss: 0.35,
-    crashMin: 110,
-    hardCrash: 240,
+    crashMin: 80,
+    hardCrash: 170,
     surface: { road: 1, alley: 0.96, path: 0.88, grass: 0.72 },
   },
 
   ui: { clearTop: 46 },      // UI units kept clear at the top centre for Poki's button
 
-  ramp: { minSpeed: 150, airMin: 0.45, airMax: 0.95, heightMin: 14, heightMax: 34 },
+  ramp: { minSpeed: 110, airMin: 0.45, airMax: 0.95, heightMin: 14, heightMax: 34 },
 
   shift: {
     startTime: 60,
     maxTime: 99,
     timeBase: 3,             // seconds added per delivery at the start of a shift...
     timeBaseEnd: 1.5,        // ...shrinking to this as difficulty ramps up
-    timePerUnit: 0.0048,     // plus seconds per world unit of delivery distance
+    timePerUnit: 0.0075,     // plus seconds per world unit of delivery distance
     perfectTime: 2,
     lowTime: 10,
   },
@@ -76,7 +76,7 @@ export const CONFIG = {
     fragilePenalty: 0.25,
     nearMiss: 5,
     nearMissDist: 30,
-    nearMissSpeed: 190,
+    nearMissSpeed: 130,
     nearMissCooldown: 3,
     driftMin: 1.0,
     driftPerSec: 6,
@@ -90,25 +90,25 @@ export const CONFIG = {
     startAfter: 2,
     chance: 0.35,
     expressBase: 9,
-    expressPerUnit: 1 / 150,
+    expressPerUnit: 1 / 100,
     fragileImpact: 140,
     maxDamage: 4,
   },
 
   difficulty: {
     rampDeliveries: 14,
-    minDistStart: 450,
-    minDistEnd: 1400,
-    bandStart: 800,
-    bandEnd: 1200,
+    minDistStart: 350,
+    minDistEnd: 1000,
+    bandStart: 600,
+    bandEnd: 800,
   },
 
   traffic: {
     countStart: 7,
     countEnd: 18,
     titleCount: 12,
-    speedMin: 115,
-    speedMax: 165,
+    speedMin: 75,
+    speedMax: 110,
     spawnMin: 900,
     spawnMax: 1700,
     despawn: 2300,
