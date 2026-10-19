@@ -342,7 +342,7 @@ export class HUD {
     const vs = r.toScreen(shift.van.x, shift.van.y);
     const x0 = L.left + 34 * u, x1 = L.right - 34 * u;
     let y0 = L.top + 70 * u;
-    const y1 = L.bottom - (G.touchUI ? 150 * u : 60 * u);
+    let y1 = L.bottom - 50 * u;
     const inside = sp.x > x0 && sp.x < x1 && sp.y > L.top + 30 * u && sp.y < L.bottom - 20 * u;
     const bob = Math.sin(t * 6) * 6 * u;
     if (inside) {
@@ -370,20 +370,25 @@ export class HUD {
     let dx = sp.x - vs.x, dy = sp.y - vs.y;
     const len = Math.hypot(dx, dy) || 1;
     dx /= len; dy /= len;
-    const edge = (top) => {
-      const cx = clamp(vs.x, x0, x1), cy = clamp(vs.y, top, y1);
+    const edge = (top, bottom) => {
+      const cx = clamp(vs.x, x0, x1), cy = clamp(vs.y, top, bottom);
       let tMax = Infinity;
       if (dx > 0) tMax = Math.min(tMax, (x1 - cx) / dx);
       if (dx < 0) tMax = Math.min(tMax, (x0 - cx) / dx);
-      if (dy > 0) tMax = Math.min(tMax, (y1 - cy) / dy);
+      if (dy > 0) tMax = Math.min(tMax, (bottom - cy) / dy);
       if (dy < 0) tMax = Math.min(tMax, (top - cy) / dy);
       return [cx + dx * tMax, cy + dy * tMax];
     };
-    let [ax, ay] = edge(y0);
+    let [ax, ay] = edge(y0, y1);
+    // On touch screens, stay above the steering stick and the buttons in the bottom corners.
+    if (G.touchUI && ay > L.bottom - 160 * u && (ax < L.left + 200 * u || ax > L.brakeBtn.x - L.brakeBtn.r - 30 * u)) {
+      y1 = L.bottom - 160 * u;
+      [ax, ay] = edge(y0, y1);
+    }
     // Keep clear of the timer (left) and coins/combo (right) clusters.
     if (ay < L.top + 130 * u && (ax < L.left + 200 * u || ax > L.right - 240 * u)) {
       y0 = L.top + 140 * u;
-      [ax, ay] = edge(y0);
+      [ax, ay] = edge(y0, y1);
     }
     const ang = Math.atan2(dy, dx);
     const R = 25 * u;
@@ -411,7 +416,7 @@ export class HUD {
     icon(ctx, info.icon, 0, 1 * u, R * 1.15, info.icon === 'house' ? shade(info.color, -0.2) : PAL.cream);
     ctx.restore();
     const dm = Math.round(Math.hypot(info.x - shift.van.x, info.y - shift.van.y) / 12.8);
-    const ty = ay + R + 18 * u > y1 + 30 * u ? ay - R - 18 * u : ay + R + 18 * u;
+    const ty = ay + R + 26 * u > L.bottom ? ay - R - 18 * u : ay + R + 18 * u;
     text(ctx, `${dm}m`, ax, ty, 16 * u, { sw: 4 * u });
   }
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { root } from './harness.mjs';
 
 const out = path.join(root, 'tools', 'test', 'shots');
-const suites = ['fullshift.mjs', 'touch.mjs', 'garage.mjs', 'screens.mjs'];
+const suites = ['fullshift.mjs', 'touch.mjs', 'garage.mjs', 'mechanics.mjs', 'audio.mjs', 'resize.mjs', 'screens.mjs'];
 let failed = 0;
 for (const s of suites) {
   console.log(`\n=== ${s} ===`);

@@ -405,13 +405,19 @@ export class ButtonGroup {
   }
 
   draw(ctx, t, u, showFocus) {
+    this.t = t;
     this.buttons.forEach((b, i) => b.draw(ctx, t, u, showFocus && i === this.focus));
+  }
+
+  // Buttons only accept input once they have animated in.
+  ready(b) {
+    return b.visible && (this.t === undefined || this.t >= b.delay + 0.15);
   }
 
   pointerDown(p) {
     for (let i = this.buttons.length - 1; i >= 0; i--) {
       const b = this.buttons[i];
-      if (b.hit(p.x, p.y)) {
+      if (b.hit(p.x, p.y) && this.ready(b)) {
         b.pressed = true;
         this.active.set(p.id, b);
         return true;
@@ -444,7 +450,7 @@ export class ButtonGroup {
   }
 
   fire(b) {
-    if (!b.visible) return;
+    if (!this.ready(b)) return;
     if (!b.enabled) {
       b.wobble = 1;
       Sound.denied();

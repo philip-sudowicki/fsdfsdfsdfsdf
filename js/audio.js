@@ -80,14 +80,14 @@ const SONGS = {
       const barIdx = Math.floor(step / 16) % 4;
       const ch = MENU_CHORDS[barIdx];
       if (s === 0 || s === 8) {
-        a.tone(midi(ch.bass), t, sd * 7, { type: 'triangle', vol: 0.28, attack: 0.02, bus: a.music });
+        a.tone(midi(ch.bass), t, sd * 7, { type: 'triangle', vol: 0.4, attack: 0.02, bus: a.music });
       }
       const tone = ch.tones[ARP[s] % ch.tones.length];
-      a.tone(midi(tone + 12), t, sd * 1.5, { type: 'triangle', vol: 0.06, attack: 0.004, bus: a.music });
+      a.tone(midi(tone + 12), t, sd * 1.5, { type: 'triangle', vol: 0.1, attack: 0.004, bus: a.music });
       const bar = MENU_MEL[barIdx];
       if (bar[s]) {
-        a.tone(midi(bar[s]), t, sd * noteLength(bar, s) * 0.9, { type: 'sine', vol: 0.12, attack: 0.03, bus: a.music });
-        a.tone(midi(bar[s] + 12), t, sd * noteLength(bar, s) * 0.6, { type: 'triangle', vol: 0.03, attack: 0.03, bus: a.music });
+        a.tone(midi(bar[s]), t, sd * noteLength(bar, s) * 0.9, { type: 'sine', vol: 0.18, attack: 0.03, bus: a.music });
+        a.tone(midi(bar[s] + 12), t, sd * noteLength(bar, s) * 0.6, { type: 'triangle', vol: 0.05, attack: 0.03, bus: a.music });
       }
       if (s === 0 || s === 10) a.kick(t, 0.45);
       if (s === 4 || s === 12) a.snare(t, 0.12);

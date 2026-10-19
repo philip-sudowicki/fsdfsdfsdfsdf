@@ -21,6 +21,14 @@ export class TimeUpOverlay extends Scene {
     this.skip = this.ui.add(new Button({ label: 'FINISH SHIFT', color: '#7c8aa8', delay: 0.35, sound: 'back', onClick: () => this.decline() }));
   }
 
+  // A rewarded ad must be a deliberate choice: Space (the throw key) does
+  // nothing here, and Enter only confirms a button picked with the arrows.
+  keyDown(code) {
+    if (code === 'Space') return true;
+    if ((code === 'Enter' || code === 'NumpadEnter') && this.ui.focus < 0) return true;
+    return super.keyDown(code);
+  }
+
   watchAd() {
     if (this.busy) return;
     this.busy = true;

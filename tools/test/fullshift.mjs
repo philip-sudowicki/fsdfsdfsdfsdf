@@ -122,6 +122,11 @@ await overlayIs(page, 'TimeUpOverlay', 0.5, 20000);
 log = await page.evaluate(() => window.__pokiLog.slice());
 check(log[log.length - 1] === 'gameplayStop', 'time up calls gameplayStop');
 await page.screenshot({ path: path.join(out, 'full-03-timeup.png') });
+await page.keyboard.press('Space');
+await page.keyboard.press('Enter');
+await sleep(300);
+check((await page.evaluate(() => window.__pokiLog.slice(-1)[0])) === 'gameplayStop', 'Space/Enter alone do not start the rewarded ad');
+await page.keyboard.press('ArrowDown');
 await page.keyboard.press('Enter');
 await waitFor(page, async () => {
   const { G } = await import('/js/state.js');
@@ -178,6 +183,7 @@ await page.evaluate(async () => {
 await overlayIs(page, 'TimeUpOverlay', 0.5, 10000);
 // An ad that does not complete must not grant the reward.
 await page.evaluate(() => { window.__rewardResult = false; });
+await page.keyboard.press('ArrowDown');
 await page.keyboard.press('Enter');
 await overlayIs(page, 'ResultsOverlay', 0.2, 10000);
 const after = await readState(page);
