@@ -70,9 +70,15 @@ export class LoadingScene extends Scene {
 
   async begin() {
     try {
-      const ff = new FontFace('Lilita', 'url(assets/fonts/LilitaOne-Regular.woff2)');
-      await ff.load();
-      document.fonts.add(ff);
+      // Use the face if the host page already registered it, otherwise load the bundled file.
+      let face = null;
+      document.fonts.forEach((f) => { if (f.family.replace(/["']/g, '') === 'Lilita') face = f; });
+      if (face) await face.load();
+      else {
+        const ff = new FontFace('Lilita', 'url(assets/fonts/LilitaOne-Regular.woff2)');
+        await ff.load();
+        document.fonts.add(ff);
+      }
     } catch (e) {
       // Fall back to system fonts if the font cannot load.
     }
