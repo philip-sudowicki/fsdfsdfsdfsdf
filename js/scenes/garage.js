@@ -65,6 +65,7 @@ export class GarageScene extends Scene {
     if (lvl >= up.prices.length || d.coins < up.prices[lvl]) return;
     d.coins -= up.prices[lvl];
     d.upgrades[up.id] = lvl + 1;
+    this.pipPop = { id: up.id, k: lvl, t: 0 };
     Save.write();
     Sound.buy();
     this.coinPop = 1;
@@ -168,6 +169,7 @@ export class GarageScene extends Scene {
     super.update(dt);
     Attract.update(dt);
     this.coinPop = Math.max(0, this.coinPop - dt * 3);
+    if (this.pipPop) this.pipPop.t += dt;
     for (const s of this.sparks) {
       s.t += dt;
       s.vy += 700 * G.u * dt;
@@ -296,12 +298,19 @@ export class GarageScene extends Scene {
       const showDesc = avail > 5 * (pip + 5 * u) + measure(ctx, UP_DESC[up.id], 12 * u) + 16 * u;
       for (let k = 0; k < up.prices.length; k++) {
         const px = tx + k * (pip + 5 * u);
+        const py = ry + U.rowH * 0.08;
+        const pp = this.pipPop;
+        const popped = pp && pp.id === up.id && pp.k === k ? 1 + 0.6 * Math.max(0, 1 - pp.t * 3) * Math.sin(Math.min(pp.t * 3, 1) * Math.PI) : 1;
+        ctx.save();
+        ctx.translate(px + pip / 2, py + pip / 2);
+        ctx.scale(popped, popped);
         ctx.fillStyle = PAL.ink;
-        roundRect(ctx, px, ry + U.rowH * 0.08, pip, pip, 3 * u);
+        roundRect(ctx, -pip / 2, -pip / 2, pip, pip, 3 * u);
         ctx.fill();
         ctx.fillStyle = k < lvl ? PAL.sun : '#d9cfbe';
-        roundRect(ctx, px + 2 * u, ry + U.rowH * 0.08 + 2 * u, pip - 4 * u, pip - 4 * u, 2 * u);
+        roundRect(ctx, -pip / 2 + 2 * u, -pip / 2 + 2 * u, pip - 4 * u, pip - 4 * u, 2 * u);
         ctx.fill();
+        ctx.restore();
       }
       if (showDesc) {
         text(ctx, UP_DESC[up.id], tx + 5 * (pip + 5 * u) + 8 * u, ry + U.rowH * 0.08 + pip / 2, 12 * u, { align: 'left', color: shade(PAL.ink, 0.35), stroke: false });

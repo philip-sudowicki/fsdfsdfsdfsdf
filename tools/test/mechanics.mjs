@@ -191,14 +191,16 @@ await tipFrom(async () => {
 await tipFrom(async () => {
   await ev(async () => {
     const { G } = await import('/js/state.js');
+    const T = 128;
+    // A car heading west on a straight stretch, the van heading east in the other lane.
+    G.town.traffic.cars.length = 0;
+    const car = G.town.traffic.spawnAt(12, 13, 2);
+    car.s = 0;
+    car.speed = car.cruise;
     const v = G.scene.shift.van;
-    const car = G.town.traffic.cars[0];
-    const c = Math.cos(car.angle), s = Math.sin(car.angle);
-    // Oncoming, offset one lane over so it passes close without touching.
-    v.x = car.x + c * 220 - s * 62; v.y = car.y + s * 220 + c * 62;
-    v.angle = car.angle + Math.PI; v.vx = -c * 420; v.vy = -s * 420;
+    v.x = 8.5 * T; v.y = 13.5 * T + 30; v.angle = 0; v.vx = 430; v.vy = 0; v.angVel = 0;
   });
-}, 700, 'NEAR MISS');
+}, 1000, 'NEAR MISS');
 
 await browser.close();
 srv.stop();

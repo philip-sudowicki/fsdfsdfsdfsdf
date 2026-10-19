@@ -6,7 +6,7 @@ import { DEPOT } from './world.js';
 import { G, portrait } from './state.js';
 import { text, icon, pill, wrap, measure } from './ui.js';
 import { textScale } from './fx.js';
-import { clamp, ease, roundRect, rgba, shade, TAU, damp } from './util.js';
+import { clamp, ease, roundRect, rgba, shade, mix, TAU, damp } from './util.js';
 
 export function hudLayout() {
   const u = G.u;
@@ -68,6 +68,7 @@ export class HUD {
     if (sp) this.special = { kind: sp.kind, expressT: sp.expressT, damage: sp.damage };
     this.specialOn = !!sp;
     this.specialK = clamp(this.specialK + (sp ? dt : -dt) / 0.25, 0, 1);
+    this.readyK = damp(this.readyK || 0, shift.meter.inRange ? 1 : 0, 12, dt);
     this.updatePrompt(dt, shift);
   }
 
@@ -343,7 +344,8 @@ export class HUD {
     const x0 = L.left + 34 * u, x1 = L.right - 34 * u;
     let y0 = L.top + 70 * u;
     let y1 = L.bottom - 50 * u;
-    const inside = sp.x > x0 && sp.x < x1 && sp.y > L.top + 30 * u && sp.y < L.bottom - 20 * u;
+    // On-screen targets get a bobbing marker above them, if it fits on screen.
+    const inside = sp.x > x0 && sp.x < x1 && sp.y - 70 * u > L.top && sp.y < L.bottom - 20 * u;
     const bob = Math.sin(t * 6) * 6 * u;
     if (inside) {
       const y = sp.y - 52 * u + bob;
@@ -477,10 +479,10 @@ export class HUD {
     text(ctx, 'BRAKE', B.x, B.y + 2 * u + bp * 3 * u, 16 * u, { sw: 4 * u });
     // Throw.
     const T = L.throwBtn;
-    const ready = shift.meter.inRange;
+    const k = this.readyK || 0;
     const tp = this.throwFlash || 0;
-    const pr = ready ? 1 + 0.05 * Math.sin(t * 10) : 1;
-    this.roundButton(ctx, T.x, T.y, T.r * pr, ready ? PAL.coral : '#a7a3b5', tp, fade);
+    const pr = 1 + 0.05 * k * Math.sin(t * 10);
+    this.roundButton(ctx, T.x, T.y, T.r * pr, mix('#a7a3b5', PAL.coral, k), tp, fade);
     icon(ctx, 'box', T.x, T.y - 12 * u + tp * 4 * u, 30 * u, PAL.cream);
     text(ctx, 'THROW', T.x, T.y + 22 * u + tp * 4 * u, 19 * u, { sw: 4 * u });
     ctx.restore();

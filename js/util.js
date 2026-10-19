@@ -2,7 +2,6 @@ export const TAU = Math.PI * 2;
 
 export const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 export const lerp = (a, b, t) => a + (b - a) * t;
-export const invLerp = (a, b, v) => clamp((v - a) / (b - a), 0, 1);
 export const damp = (cur, target, rate, dt) => lerp(cur, target, 1 - Math.exp(-rate * dt));
 export const dist = (ax, ay, bx, by) => Math.hypot(bx - ax, by - ay);
 
@@ -47,11 +46,6 @@ export const ease = {
   },
 };
 
-// Eased 0..1 progress of a timer that starts at `delay` and lasts `dur`.
-export function prog(t, delay, dur) {
-  return clamp((t - delay) / dur, 0, 1);
-}
-
 export function hexToRgb(hex) {
   const n = parseInt(hex.slice(1), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
@@ -93,11 +87,6 @@ export function makeCanvas(w, h) {
   c.width = Math.max(1, Math.ceil(w));
   c.height = Math.max(1, Math.ceil(h));
   return c;
-}
-
-// Distance from a point to an axis-aligned rect's closest point.
-export function closestOnRect(px, py, x0, y0, x1, y1) {
-  return [clamp(px, x0, x1), clamp(py, y0, y1)];
 }
 
 export const FONT = 'Lilita, "Arial Rounded MT Bold", "Trebuchet MS", sans-serif';

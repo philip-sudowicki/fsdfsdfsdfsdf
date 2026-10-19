@@ -76,22 +76,35 @@ flows locally.
 
 ```bash
 npm install          # installs Playwright (uses an existing Chromium if PLAYWRIGHT_BROWSERS_PATH is set)
-npm test             # runs everything below
+npm test             # runs every suite below (takes a few minutes)
 ```
 
-- `tools/test/fullshift.mjs` plays a whole shift with real keyboard input. A bot
-  path-finds over the road tiles, aims throws, and checks:
-  - the Poki call order (init, gameLoadingFinished, commercialBreak before
-    gameplayStart, gameplayStop on pause, time up and menu, rewardedBreak);
-  - that audio is muted and input is blocked during ads;
-  - pause on a hidden tab;
-  - the time-up and double-coins rewards;
-  - that progress saves and reloads;
-  - zero console errors.
-- `tools/test/touch.mjs` runs on a touch phone viewport. It checks drag-to-steer,
-  BRAKE, THROW with a second finger down, and the pause button.
-- `tools/test/screens.mjs` screenshots every screen at 844x390, 390x844 and
-  1920x1080 into `tools/test/shots/`.
+| Suite | What it checks |
+| --- | --- |
+| `fullshift.mjs` | Plays whole shifts with real keyboard input (see below). |
+| `touch.mjs` | On a touch phone viewport: drag-to-steer, BRAKE, THROW with a second finger down, and the pause button. |
+| `mechanics.mjs` | Throw zones, combos, the time bonus, depot reloading, EXPRESS and FRAGILE parcels, drift/air/bin/near-miss tips, and upgrade effects. |
+| `garage.mjs` | Buying upgrades and vans, refused purchases, equipping, settings toggles, and persistence. |
+| `audio.mjs` | Measures real output levels: music and effects play, there's silence during ads, and the toggles mute output. |
+| `resize.mjs` | Rotating a phone and resizing a window in the middle of a shift. |
+| `screens.mjs` | Screenshots every screen at 844x390, 390x844 and 1920x1080 into `tools/test/shots/`. |
+
+`fullshift.mjs` uses a bot that path-finds over the road tiles and aims its throws.
+It checks:
+
+- the Poki call order (init, gameLoadingFinished, commercialBreak before
+  gameplayStart, gameplayStop on pause, time up and menu, rewardedBreak);
+- that audio is muted and input is blocked during ads;
+- pause on a hidden tab;
+- the time-up and double-coins rewards;
+- that progress saves and reloads.
+
+Every suite also fails on any console error.
+
+Two dev helpers aren't part of `npm test`:
+
+- `tools/test/moments.mjs` captures drift, jump, perfect-delivery and crash frames.
+- `tools/test/perf.mjs` reports frame timing.
 
 ## Package for Poki
 

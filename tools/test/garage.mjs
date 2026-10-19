@@ -51,7 +51,7 @@ check((await get('Save.data.skin')) === 'classic' && (await get('Save.data.coins
 await page.keyboard.press('ArrowDown');
 check((await get('G.scene.ui.focus')) >= 0, 'arrow keys move menu focus');
 await page.keyboard.press('Escape');
-await sceneIs(page, 'TitleScene', 0.5);
+await sceneIs(page, 'TitleScene', 1.2);
 
 // Settings toggles persist.
 await clickAt('G.scene.settings');
@@ -63,7 +63,7 @@ await page.keyboard.press('Escape');
 await sleep(300);
 
 await page.reload();
-await sceneIs(page, 'TitleScene', 0.5, 30000);
+await sceneIs(page, 'TitleScene', 1.2, 30000);
 const d = await get('Save.data');
 check(d.coins === 250 && d.upgrades.capacity === 1 && d.skins.includes('mint') && d.skin === 'classic' && d.music === false && d.sound === false, 'garage and settings persist after reload');
 

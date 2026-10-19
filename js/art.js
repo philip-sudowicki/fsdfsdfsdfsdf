@@ -1,7 +1,7 @@
 // Every sprite and ground tile is drawn in code and cached on offscreen canvases.
 import { CONFIG } from './config.js';
 import { TL, DIRS, POND, DEPOT } from './world.js';
-import { mulberry32, shade, mix, rgba, roundRect, makeCanvas, TAU, FONT, hashStr } from './util.js';
+import { mulberry32, shade, rgba, roundRect, makeCanvas, TAU, FONT, hashStr } from './util.js';
 
 const T = CONFIG.tile;
 
@@ -1191,4 +1191,3 @@ export function paintVan(ctx, skin, x, y, scale, angle) {
   ctx.restore();
 }
 
-export { C as SHADES, mix };

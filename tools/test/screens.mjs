@@ -57,7 +57,7 @@ for (const size of SIZES) {
   await shot('04-garage');
   b = await btn(page, 'G.scene.back');
   await click(page, b.x, b.y, size.touch);
-  await sceneIs(page, 'TitleScene', 0.8);
+  await sceneIs(page, 'TitleScene', 1.2);
   b = await btn(page, 'G.scene.play');
   await click(page, b.x, b.y, size.touch);
   await sceneIs(page, 'GameScene', 0.3);

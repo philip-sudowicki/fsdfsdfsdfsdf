@@ -236,9 +236,13 @@ export class Shift {
   trafficContact(dt) {
     const van = this.van;
     const V = CONFIG.van;
+    const range = 26 + 28 + TIPS.nearMissDist;
     for (const car of this.town.traffic.cars) {
       const d = dist(car.x, car.y, van.x, van.y);
-      if (d > 90) continue;
+      if (d > 160) {
+        car.nearArmed = false;
+        continue;
+      }
       const c = Math.cos(car.angle), s = Math.sin(car.angle);
       let best = { impact: 0 };
       for (const off of [11, -11]) {
@@ -249,20 +253,21 @@ export class Shift {
         car.stopT = CONFIG.traffic.stopTime;
         car.bump = 1;
         car.nearT = TIPS.nearMissCooldown;
+        car.nearArmed = false;
         if (best.impact > V.crashMin * 0.7) {
           this.onVanEvent({ type: 'crash', impact: best.impact, x: (van.x + car.x) / 2, y: (van.y + car.y) / 2, nx: best.nx, ny: best.ny, car: true });
           Sound.honk(car.pitch);
         }
         continue;
       }
-      // Near miss: fast pass close by without touching.
-      if (car.nearT <= 0 && !van.air && van.speed > TIPS.nearMissSpeed && d < 26 + 28 + TIPS.nearMissDist) {
-        const rel = Math.hypot(van.vx - car.vx, van.vy - car.vy);
-        if (rel > 200) {
-          car.nearT = TIPS.nearMissCooldown;
-          this.addTip(TIPS.nearMiss, 'NEAR MISS', PAL.teal);
-          Sound.nearMiss();
-        }
+      // Near miss: a fast, close pass pays out once the van is clear without touching.
+      if (car.nearT <= 0 && !van.air && van.speed > TIPS.nearMissSpeed && d < range) {
+        if (Math.hypot(van.vx - car.vx, van.vy - car.vy) > 200) car.nearArmed = true;
+      } else if (car.nearArmed && d >= range) {
+        car.nearArmed = false;
+        car.nearT = TIPS.nearMissCooldown;
+        this.addTip(TIPS.nearMiss, 'NEAR MISS', PAL.teal);
+        Sound.nearMiss();
       }
     }
   }

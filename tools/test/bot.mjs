@@ -123,7 +123,7 @@ export async function drive(page, world, { until, timeout = 60000, aim = 'perfec
       const off = Math.abs(st.meter.pos - 0.5);
       const g = st.meter.green;
       const outward = Math.sign(st.meter.pos - 0.5) === st.meter.dir;
-      const ok = aim === 'perfect' ? off < g * 0.55 : aim === 'good' ? outward && off > g + 0.02 && off < 0.16 : aim === 'miss' ? off > 0.32 : true;
+      const ok = aim === 'none' ? false : aim === 'perfect' ? off < g * 0.55 : aim === 'good' ? outward && off > g + 0.02 && off < 0.16 : aim === 'miss' ? off > 0.32 : true;
       if (ok) {
         await page.keyboard.press('Space');
         log(`throw at ${st.meter.pos.toFixed(3)}`);

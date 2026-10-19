@@ -42,7 +42,7 @@ export class ResultsOverlay extends Scene {
     this.busy = false;
     this.done = new Set();
     this.again = this.ui.add(new Button({ label: 'PLAY AGAIN', icon: 'play', color: PAL.coral, delay: this.coinStart + 0.2, onClick: () => G.startShift() }));
-    this.double = this.ui.add(new Button({ label: 'DOUBLE COINS', icon: 'ad', color: '#6cc08b', badge: 'AD', delay: this.coinStart + 0.3, visible: res.coins > 0, onClick: () => this.watchAd() }));
+    this.double = this.ui.add(new Button({ label: 'DOUBLE COINS', sub: 'An ad will play first', icon: 'ad', color: '#6cc08b', badge: 'AD', delay: this.coinStart + 0.3, visible: res.coins > 0, onClick: () => this.watchAd() }));
     this.garage = this.ui.add(new Button({ label: 'GARAGE', icon: 'wrench', color: PAL.teal, delay: this.coinStart + 0.4, onClick: () => G.setScene(new GarageScene()) }));
     this.menu = this.ui.add(new Button({ label: 'MENU', icon: 'home', color: '#7c8aa8', delay: this.coinStart + 0.45, sound: 'back', onClick: () => G.toTitle() }));
   }

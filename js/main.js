@@ -162,6 +162,7 @@ canvas.addEventListener('pointermove', (e) => {
   if (t && t.pointerMove) t.pointerMove(pointer(e));
 });
 const up = (e) => {
+  Sound.unlock();
   if (G.inputBlocked) return;
   const t = topTarget();
   if (t && t.pointerUp) t.pointerUp(pointer(e), e.type === 'pointercancel');
@@ -186,6 +187,8 @@ window.addEventListener('keyup', (e) => {
 window.addEventListener('blur', () => G.keys.clear());
 window.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
 document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+// Some mobile browsers only allow audio to start from a touchend.
+document.addEventListener('touchend', () => Sound.unlock(), { passive: true });
 document.addEventListener('gesturestart', (e) => e.preventDefault());
 
 document.addEventListener('visibilitychange', () => {
@@ -222,11 +225,14 @@ function update(dt) {
       trans.phase = null;
     }
   }
-  G.adCover = clamp(G.adCover + (G.inputBlocked ? dt * 5 : -dt * 5), 0, 1);
+  // Only dim the screen if an ad break actually takes a moment.
+  G.blockedT = G.inputBlocked ? (G.blockedT || 0) + dt : 0;
+  G.adCover = clamp(G.adCover + (G.blockedT > 0.3 ? dt * 5 : -dt * 5), 0, 1);
   if (G.inputBlocked) return;
   const top = topTarget();
   const covered = G.overlays.some((o) => !o.leaving && o.freezeBelow);
-  G.scene.update(dt, covered, top === G.scene);
+  // The outgoing scene stays frozen while the iris closes.
+  if (trans.phase !== 'out') G.scene.update(dt, covered, top === G.scene);
   for (let i = G.overlays.length - 1; i >= 0; i--) {
     const o = G.overlays[i];
     if (o.leaving) {

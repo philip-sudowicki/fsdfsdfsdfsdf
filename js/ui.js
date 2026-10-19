@@ -411,7 +411,7 @@ export class ButtonGroup {
 
   // Buttons only accept input once they have animated in.
   ready(b) {
-    return b.visible && (this.t === undefined || this.t >= b.delay + 0.15);
+    return b.visible && (this.t === undefined || this.t >= b.delay + 0.1);
   }
 
   pointerDown(p) {

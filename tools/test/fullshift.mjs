@@ -112,12 +112,10 @@ check(st.tut === null, 'tutorial completed during the first shift');
 const saved = await page.evaluate(async () => (await import('/js/save.js')).Save.data.tutorialSeen);
 check(saved === true, 'tutorial marked as seen');
 
-// Let the clock run out (keep driving, no throws).
+// Let the clock run out naturally: keep driving but stop delivering.
+st = await drive(page, world, { timeout: 150000, aim: 'none', until: (s) => s.state !== 'play' });
+check(st.state === 'timeup', `shift clock runs out on its own (${st.state})`);
 await releaseAll(page);
-await page.evaluate(async () => {
-  const { G } = await import('/js/state.js');
-  G.scene.shift.time = Math.min(G.scene.shift.time, 3);
-});
 await overlayIs(page, 'TimeUpOverlay', 0.5, 20000);
 log = await page.evaluate(() => window.__pokiLog.slice());
 check(log[log.length - 1] === 'gameplayStop', 'time up calls gameplayStop');
@@ -167,7 +165,7 @@ check(coins2 === res.res.coins * 2, `double coins granted (${coins2})`);
 
 // Reload: progress persists.
 await page.reload();
-await sceneIs(page, 'TitleScene', 0.5, 30000);
+await sceneIs(page, 'TitleScene', 1.2, 30000);
 const persisted = await page.evaluate(async () => (await import('/js/save.js')).Save.data);
 check(persisted.coins === coins2 && persisted.tutorialSeen === true && persisted.best === res.res.coins, `progress persisted after reload (${persisted.coins}, best ${persisted.best})`);
 
