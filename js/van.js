@@ -120,7 +120,7 @@ export class Van {
 
     this.slip = Math.abs(vl);
     const sp = this.speed;
-    this.drifting = !this.air && sp > 200 && Math.abs(vl) > 70 && vf > 0;
+    this.drifting = !this.air && sp > stats.maxSpeed * 0.5 && Math.abs(vl) > 60 && vf > 0;
     if (this.drifting) this.driftTime += dt;
     else if (this.driftTime > 0) {
       events.push({ type: 'driftEnd', time: this.driftTime });

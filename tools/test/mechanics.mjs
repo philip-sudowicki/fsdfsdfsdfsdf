@@ -200,7 +200,7 @@ await tipFrom(async () => {
     const v = G.scene.shift.van;
     v.x = 8.5 * T; v.y = 13.5 * T + 30; v.angle = 0; v.vx = 430; v.vy = 0; v.angVel = 0;
   });
-}, 1000, 'NEAR MISS');
+}, 1700, 'NEAR MISS');
 
 await browser.close();
 srv.stop();

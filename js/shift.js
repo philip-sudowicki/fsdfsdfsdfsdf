@@ -223,7 +223,7 @@ export class Shift {
       fx.dust(w[0], w[1], col, 1, 18);
       fx.dust(w[2], w[3], col, 1, 18);
     }
-    const skid = !van.air && (van.drifting || (van.braking && sp > 180));
+    const skid = !van.air && (van.drifting || (van.braking && sp > this.stats.maxSpeed * 0.45));
     if (skid && van.prevWheels && van.surface !== 'grass') {
       const p = van.prevWheels;
       fx.skidMark(p[0], p[1], w[0], w[1]);
