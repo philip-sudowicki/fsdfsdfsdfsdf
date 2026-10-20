@@ -117,6 +117,17 @@ Upload that zip in the Poki for Developers dashboard. To zip by hand instead, zi
 *contents* of the project's `index.html`, `js/` and `assets/`, not the folder itself.
 Leave out `tools/`, `node_modules/` and `dist/`.
 
+### Store icon / thumbnail
+
+`promo/` holds the store images for the Poki dashboard (they are not part of the game zip):
+
+- `icon-1024.png` and `icon-512.png`: the van with no text. Poki recommends one clear object that reads at small tile sizes.
+- `icon-title-1024.png` and `icon-title-512.png`: the same art with the game's logo.
+
+The icon is drawn in code with the game's own art (`tools/icon/designs/icon.mjs`). After changing it, run
+`node tools/icon/make-icons.mjs` to regenerate `promo/` and the favicons in `assets/icon/`. To preview a design
+at small sizes, run `node tools/icon/render.mjs tools/icon/designs/icon.mjs sheet.png 1024 plain --sheet`.
+
 ### Poki integration checklist
 
 - `PokiSDK.init()` runs at boot. Loading continues whether it resolves or rejects.
